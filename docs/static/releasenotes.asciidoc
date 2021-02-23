@@ -56,52 +56,123 @@ Info here
 
 ==== Performance improvements and notable issues fixed
 
+// **JDK 15 **
+// JDK15 changes - new jvm.options file - we might want to flag this, it moves us a jvm.options file
+// that looks like the one that comes with Elasticsearch
+* 2e4845df3 - Introduction of conditional in jvm.options file (#12530) (3 weeks ago) <andsel>
+* cb35193f7 - remove CMS from jvm options in java 14 (#12638) (#12639) (2 weeks ago) <kaisecheng>
+
+/ JDK 15 - compilation
+* 05ec149b3 - Enable javadoc lint only for files that contains javadoc comments, avoid warning for missing javadoc comments on everything else (8 weeks ago) <andsel>
+
+// JDK 15 change, handling removal of Nashorn for ingest converter
+* 98d3ac9d0 - Moved ingest-converter tool from Javascript to Java, preserving the same behaviour (#12524) (5 weeks ago) <andsel>
+// JDK 15, handling removal of Nashorn for log4j appender
 * Feature/use custom routing log appender https://github.com/elastic/logstash/pull/12512[#12512]
+* b0c81338f - Implements scripted log4j filters and appenders to Java, avoid usage of deprecated Javascript Nashorn (#12512) (3 weeks ago) <andsel>
+// JDK15 testing
 * Removed CMS GC flags to run tests successfully on JDK15 https://github.com/elastic/logstash/pull/12530[#12530]
+// JDK15 compilation
+* 05ec149b3 - Enable javadoc lint only for files that contains javadoc comments, avoid warning for missing javadoc comments on everything else (8 weeks ago) <andsel>
+
+// JDK15 build
+* 7e03ce1f5 - Update CI to run on OpenJDK15 (2 weeks ago) <andsel>
+
+// Fix issue where pipelines in the loading state appear as running, causing errors in the logs until the pipeline finishes loading
 * Send monitoring information when LS pipelines is booting https://github.com/elastic/logstash/pull/12571[#12571]
+* Backport PR to 7.x of #12571 https://github.com/elastic/logstash/pull/12670[#12670]
+* [backport]Separate "not terminated" pipeline state into "running" and "loading". https://github.com/elastic/logstash/pull/12667[#12667]
+* 4e82485d3 - Separate "not terminated" pipeline state into "running" and "loading". (3 days ago) <andsel>
+* 275abab17 - Fix Logstash pipelines management in case of slow loading pipelines or disabled webserver (#12571) (2 days ago) <andsel>
+
+// Enables a way to allow plugins to trigger pipeline reloads. Relates to geoip work
 * enable converging state with predefined pipeline actions https://github.com/elastic/logstash/pull/12582[#12582]
-* [windows] fix launch when folder contains spaces https://github.com/elastic/logstash/pull/12585[#12585]
-* Improve integrationTests task checking local ES fingerprint before full download https://github.com/elastic/logstash/pull/12586[#12586]
-* Backport PR #12585 to 7.x: [windows] fix launch when folder contains spaces https://github.com/elastic/logstash/pull/12599[#12599]
-* bump jrjackson to 0.4.14 and jackson-databind to 2.9.10.8 https://github.com/elastic/logstash/pull/12603[#12603]
-* Backport PR #12603 to 7.x: bump jrjackson to 0.4.14 and jackson-databind to 2.9.10.8 https://github.com/elastic/logstash/pull/12608[#12608]
-* 7x Fix sub second `config.reload.interval` https://github.com/elastic/logstash/pull/12611[#12611]
-* replace with_clean_env with with_unbundled_env https://github.com/elastic/logstash/pull/12615[#12615]
 * [7.x] enable agent to stop pipeline by pipeline_id (#12582) https://github.com/elastic/logstash/pull/12616[#12616]
-* fix url for kafka and bump to 2.7.0 https://github.com/elastic/logstash/pull/12617[#12617]
-* Backport PR #12615 to 7.x: replace with_clean_env with with_unbundled_env https://github.com/elastic/logstash/pull/12618[#12618]
-* Backport PR #12617 to 7.x: fix url for kafka and bump to 2.7.0 https://github.com/elastic/logstash/pull/12619[#12619]
+* 73154014c - enable agent to stop pipeline by pipeline_id (#12582) (#12616) (2 weeks ago) <kaisecheng>
+
+// Fix launching logstash with bundled JDK when folder contains spaces on Windows
+* [windows] fix launch when folder contains spaces https://github.com/elastic/logstash/pull/12585[#12585]
+* Backport PR #12585 to 7.x: [windows] fix launch when folder contains spaces https://github.com/elastic/logstash/pull/12599[#12599]
+* f64a60132 - [windows] fix launch of logstash.bat when folder contains spaces (#12585) (#12599) (3 weeks ago) <João Duarte>
+
+// Use correct headers API to handle redirects in plugin manager
 * use correct headers api for redirects in plugin manager http client https://github.com/elastic/logstash/pull/12626[#12626]
 * Backport PR #12626 to 7.x: use correct headers api for redirects in plugin manager http client https://github.com/elastic/logstash/pull/12628[#12628]
-* [backport]Separate "not terminated" pipeline state into "running" and "loading". https://github.com/elastic/logstash/pull/12667[#12667]
-* Backport PR to 7.x of #12571 https://github.com/elastic/logstash/pull/12670[#12670]
-* Make integration test fail if 'offline' tool can't be compiled https://github.com/elastic/logstash/pull/12678[#12678]
+* b3bcf29d7 - use correct headers api for redirects in plugin manager http client (#12626) (#12628) (2 weeks ago) <João Duarte>
+
+// TODO: Make sure LS exits when running into fatal errors, such as OutOfMemoryErrors, and improve logging
+// in these scenarios
+* 53e73e9cc - Fix: make sure LS exits when running into fatal errors (#12559) (5 weeks ago) <Karol Bucek>
+
+// TODO: Sumarise PQ corrution bug
+* e2f2255fa - pq: eliminate corruption by forcing version byte to be persisted (5 weeks ago) <Ry Biesemeyer>
+
+// TODO: This informs users that certain command line flags have been deprecated - warning was previously hidden
+* 8abfc50d0 - Fix showing deprecation warning of command line flags (#12592) (#12640) (2 weeks ago) <kaisecheng>
+
+// Build changes
+* Improve integrationTests task checking local ES fingerprint before full download https://github.com/elastic/logstash/pull/12586[#12586]
+* c96ae0d4b - Fix the run of copyEs and downloadEs gradle task. (#12586) (2 weeks ago) <andsel>
+
+* replace with_clean_env with with_unbundled_env https://github.com/elastic/logstash/pull/12615[#12615]
+* Backport PR #12615 to 7.x: replace with_clean_env with with_unbundled_env https://github.com/elastic/logstash/pull/12618[#12618]
+* d0f1ed4c7 - Revert "replace with_clean_env with with_unbundled_env (#12615) (#12618)" (3 weeks ago) <Joao Duarte>
+* ff3cf929f - replace with_clean_env with with_unbundled_env (#12615) (#12618) (3 weeks ago) <João Duarte>
+
+// Build change to update 3rd party licensing
+* a5dbc8d2a - Update license dependency information (#12544) (6 weeks ago) <Rob Bavey>
+
+// Build change to help with building docker image on dockerhub
+* de3ee98f8 - [7x backport] Update dockerfile template to allow selection of architecture by env (#12641) (2 weeks ago) <Rob Bavey>
+
+// These are the same, related to updating dependencies
+* bump jrjackson to 0.4.14 and jackson-databind to 2.9.10.8 https://github.com/elastic/logstash/pull/12603[#12603]
+* Backport PR #12603 to 7.x: bump jrjackson to 0.4.14 and jackson-databind to 2.9.10.8 https://github.com/elastic/logstash/pull/12608[#12608]
+
+// Test Fixes
+* 7x Fix sub second `config.reload.interval` https://github.com/elastic/logstash/pull/12611[#12611]
+* 656c2bfd4 - 7x Fix sub second `config.reload.interval` (#12611) (2 weeks ago) <Rob Bavey>
+
+// Kinda related to some of the JDK changes - no need to promote in and of itself
+* 71b7061b4 - [7x backport] Update docker container tests to handle jvm option parser (#12635) (2 weeks ago) <Rob Bavey>
+
 * Make integration test fail if 'offline' tool can't be compiled https://github.com/elastic/logstash/pull/12680[#12680]
+* Make integration test fail if 'offline' tool can't be compiled https://github.com/elastic/logstash/pull/12678[#12678]
+* 567487fdc - Make integration test fail if 'offline' tool can't be compiled (5 hours ago) <andsel>
+
+
+* Backport PR #12617 to 7.x: fix url for kafka and bump to 2.7.0 https://github.com/elastic/logstash/pull/12619[#12619]
+* fix url for kafka and bump to 2.7.0 https://github.com/elastic/logstash/pull/12617[#12617]
+* 91c27cd73 - fix url for kafka and bump to 2.7.0 (#12617) (#12619) (3 weeks ago) <João Duarte>
+
+
+
 
 ==== Logstash Commits between 7.12 and 7.11.1
 
-* 567487fdc - Make integration test fail if 'offline' tool can't be compiled (5 hours ago) <andsel>
-* 275abab17 - Fix Logstash pipelines management in case of slow loading pipelines or disabled webserver (#12571) (2 days ago) <andsel>
-* 4e82485d3 - Separate "not terminated" pipeline state into "running" and "loading". (3 days ago) <andsel>
-* de3ee98f8 - [7x backport] Update dockerfile template to allow selection of architecture by env (#12641) (2 weeks ago) <Rob Bavey>
-* c96ae0d4b - Fix the run of copyEs and downloadEs gradle task. (#12586) (2 weeks ago) <andsel>
-* 8abfc50d0 - Fix showing deprecation warning of command line flags (#12592) (#12640) (2 weeks ago) <kaisecheng>
-* 71b7061b4 - [7x backport] Update docker container tests to handle jvm option parser (#12635) (2 weeks ago) <Rob Bavey>
-* cb35193f7 - remove CMS from jvm options in java 14 (#12638) (#12639) (2 weeks ago) <kaisecheng>
-* 656c2bfd4 - 7x Fix sub second `config.reload.interval` (#12611) (2 weeks ago) <Rob Bavey>
-* 73154014c - enable agent to stop pipeline by pipeline_id (#12582) (#12616) (2 weeks ago) <kaisecheng>* 7e03ce1f5 - Update CI to run on OpenJDK15 (2 weeks ago) <andsel>
-* b3bcf29d7 - use correct headers api for redirects in plugin manager http client (#12626) (#12628) (2 weeks ago) <João Duarte>
-* 91c27cd73 - fix url for kafka and bump to 2.7.0 (#12617) (#12619) (3 weeks ago) <João Duarte>
-* d0f1ed4c7 - Revert "replace with_clean_env with with_unbundled_env (#12615) (#12618)" (3 weeks ago) <Joao Duarte>
-* ff3cf929f - replace with_clean_env with with_unbundled_env (#12615) (#12618) (3 weeks ago) <João Duarte>
-* f64a60132 - [windows] fix launch of logstash.bat when folder contains spaces (#12585) (#12599) (3 weeks ago) <João Duarte>
-* 2e4845df3 - Introduction of conditional in jvm.options file (#12530) (3 weeks ago) <andsel>
-* b0c81338f - Implements scripted log4j filters and appenders to Java, avoid usage of deprecated Javascript Nashorn (#12512) (3 weeks ago) <andsel>
-* 53e73e9cc - Fix: make sure LS exits when running into fatal errors (#12559) (5 weeks ago) <Karol Bucek>
-* 98d3ac9d0 - Moved ingest-converter tool from Javascript to Java, preserving the same behaviour (#12524) (5 weeks ago) <andsel>
-* e2f2255fa - pq: eliminate corruption by forcing version byte to be persisted (5 weeks ago) <Ry Biesemeyer>
-* a5dbc8d2a - Update license dependency information (#12544) (6 weeks ago) <Rob Bavey>
-* 05ec149b3 - Enable javadoc lint only for files that contains javadoc comments, avoid warning for missing javadoc comments on everything else (8 weeks ago) <andsel>
+
+// * 275abab17 - Fix Logstash pipelines management in case of slow loading pipelines or disabled webserver (#12571) (2 days ago) <andsel>
+// * 4e82485d3 - Separate "not terminated" pipeline state into "running" and "loading". (3 days ago) <andsel>
+// * de3ee98f8 - [7x backport] Update dockerfile template to allow selection of architecture by env (#12641) (2 weeks ago) <Rob Bavey>
+// * c96ae0d4b - Fix the run of copyEs and downloadEs gradle task. (#12586) (2 weeks ago) <andsel>
+// * 8abfc50d0 - Fix showing deprecation warning of command line flags (#12592) (#12640) (2 weeks ago) <kaisecheng>
+// * 71b7061b4 - [7x backport] Update docker container tests to handle jvm option parser (#12635) (2 weeks ago) <Rob Bavey>
+// * cb35193f7 - remove CMS from jvm options in java 14 (#12638) (#12639) (2 weeks ago) <kaisecheng>
+// * 656c2bfd4 - 7x Fix sub second `config.reload.interval` (#12611) (2 weeks ago) <Rob Bavey>
+// * 73154014c - enable agent to stop pipeline by pipeline_id (#12582) (#12616) (2 weeks ago) <kaisecheng>
+// * 7e03ce1f5 - Update CI to run on OpenJDK15 (2 weeks ago) <andsel>
+// * b3bcf29d7 - use correct headers api for redirects in plugin manager http client (#12626) (#12628) (2 weeks ago) <João Duarte>
+// * 91c27cd73 - fix url for kafka and bump to 2.7.0 (#12617) (#12619) (3 weeks ago) <João Duarte>
+// * d0f1ed4c7 - Revert "replace with_clean_env with with_unbundled_env (#12615) (#12618)" (3 weeks ago) <Joao Duarte>
+// * ff3cf929f - replace with_clean_env with with_unbundled_env (#12615) (#12618) (3 weeks ago) <João Duarte>
+// * f64a60132 - [windows] fix launch of logstash.bat when folder contains spaces (#12585) (#12599) (3 weeks ago) <João Duarte>
+// * 2e4845df3 - Introduction of conditional in jvm.options file (#12530) (3 weeks ago) <andsel>
+// * b0c81338f - Implements scripted log4j filters and appenders to Java, avoid usage of deprecated Javascript Nashorn (#12512) (3 weeks ago) <andsel>
+// * 53e73e9cc - Fix: make sure LS exits when running into fatal errors (#12559) (5 weeks ago) <Karol Bucek>
+// * 98d3ac9d0 - Moved ingest-converter tool from Javascript to Java, preserving the same behaviour (#12524) (5 weeks ago) <andsel>
+// * e2f2255fa - pq: eliminate corruption by forcing version byte to be persisted (5 weeks ago) <Ry Biesemeyer>
+// * a5dbc8d2a - Update license dependency information (#12544) (6 weeks ago) <Rob Bavey>
+// * 05ec149b3 - Enable javadoc lint only for files that contains javadoc comments, avoid warning for missing javadoc comments on everything else (8 weeks ago) <andsel>
 
 ==== Plugin releases
 
